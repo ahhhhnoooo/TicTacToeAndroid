@@ -13,15 +13,13 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-    public void onClickButtonRecords(View view)
-    {
-        Intent intent = new Intent(this,RecordsActivity.class);
+    public void onClickButtonRecords(View view) {
+        Intent intent = new Intent(this, RecordsActivity.class);
         startActivity(intent);
     }
 
-    public void onClickButtonGame(View view)
-    {
-        Intent intent = new Intent(this,GameActivity.class);
+    public void onClickButtonGame(View view) {
+        Intent intent = new Intent(this, GameActivity.class);
         startActivity(intent);
     }
 }
