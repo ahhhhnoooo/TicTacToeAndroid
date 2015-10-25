@@ -3,4 +3,8 @@
     <string name="action_settings">Settings</string>
     <string name="main_button_newgame">New Game</string>
     <string name="main_button_records">Records</string>
+    <string name="game_label_turn">Turn</string>
+    <string name="game_label_winner">WINNER!</string>
+    <string name="game_button_reset">Reset</string>
+    <string name="image_turn_hint">turn_indicator</string>
 </resources>
