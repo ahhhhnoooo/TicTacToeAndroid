@@ -12,8 +12,14 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.ahhhhnoooo.tictactoe.records.GameRecord;
 import com.ahhhhnoooo.tictactoe.records.GameRecordsDBHelper;
+import com.ahhhhnoooo.tictactoe.records.GameRecordsSaveTask;
 import com.ahhhhnoooo.tictactoe.records.GameRecordsTable;
+
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 
 public class GameActivity extends AppCompatActivity {
     private static final int TAG_BLANK = 0;
@@ -25,7 +31,6 @@ public class GameActivity extends AppCompatActivity {
     private Chronometer gameTimer;
     private boolean gameStarted;
     private boolean oTurn = false; //X starts
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +59,7 @@ public class GameActivity extends AppCompatActivity {
     public void onClickGameReset(View view) {
         //Save results
         if (gameStarted) {
-            //TODO save results on reset
+            //TODO save results on reset if game is not ended
         }
         reset();
     }
@@ -99,14 +104,15 @@ public class GameActivity extends AppCompatActivity {
         //Check 3 rows, 3 cols, 2 diag
         return (
                 checkWinnerRow(tag, board[0], board[1], board[2]) ||
-                checkWinnerRow(tag, board[3], board[4], board[5]) ||
-                checkWinnerRow(tag, board[6], board[7], board[8]) ||
-                checkWinnerRow(tag, board[0], board[3], board[6]) ||
-                checkWinnerRow(tag, board[1], board[4], board[7]) ||
-                checkWinnerRow(tag, board[2], board[5], board[8]) ||
-                checkWinnerRow(tag, board[0], board[4], board[8]) ||
-                checkWinnerRow(tag, board[2], board[4], board[6])
+                        checkWinnerRow(tag, board[3], board[4], board[5]) ||
+                        checkWinnerRow(tag, board[6], board[7], board[8]) ||
+                        checkWinnerRow(tag, board[0], board[3], board[6]) ||
+                        checkWinnerRow(tag, board[1], board[4], board[7]) ||
+                        checkWinnerRow(tag, board[2], board[5], board[8]) ||
+                        checkWinnerRow(tag, board[0], board[4], board[8]) ||
+                        checkWinnerRow(tag, board[2], board[4], board[6])
         );
+        //TODO If board is full with no winner
     }
 
     //Check row if this is a winning row
@@ -131,7 +137,12 @@ public class GameActivity extends AppCompatActivity {
             c.setBackgroundColor(Color.YELLOW);
 
             //Save result
-            //TODO save result after winner
+            long now = new Date().getTime();
+            String winnerName = "x";
+            if (oTurn) winnerName = "o";
+            long duration = SystemClock.elapsedRealtime() - gameTimer.getBase();
+            GameRecordsSaveTask saveTask = new GameRecordsSaveTask(this, new GameRecord(now, winnerName, duration));
+            new Thread(saveTask).start();
 
             return true;
         }
@@ -154,18 +165,5 @@ public class GameActivity extends AppCompatActivity {
             imageButton.setEnabled(true);
             imageButton.setBackgroundColor(0); //Clear background color
         }
-    }
-
-    //Save game reset in database
-    private void recordGameResult(int timestamp, String winner, int duration) {
-        GameRecordsDBHelper dbHelper = new GameRecordsDBHelper(getApplicationContext());
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        ContentValues values = new ContentValues(3);
-        values.put(GameRecordsTable.COL_NAME_TIMESTAMP, timestamp);
-        values.put(GameRecordsTable.COL_NAME_WINNER, winner);
-        values.put(GameRecordsTable.COL_NAME_DURATION, duration);
-
-        db.insert(GameRecordsTable.TABLE_NAME, null, values);
     }
 }

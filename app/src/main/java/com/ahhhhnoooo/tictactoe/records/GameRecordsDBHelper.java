@@ -13,6 +13,7 @@ public class GameRecordsDBHelper extends SQLiteOpenHelper {
 
     private static final String SQL_CREATE =
             "CREATE TABLE " + GameRecordsTable.TABLE_NAME + " (" +
+                    GameRecordsTable._ID + " " + GameRecordsTable.COL_TYPE_ID + " , " +
                     GameRecordsTable.COL_NAME_TIMESTAMP + " " + GameRecordsTable.COL_TYPE_TIMESTAMP + " , " +
                     GameRecordsTable.COL_NAME_WINNER + " " + GameRecordsTable.COL_TYPE_WINNER + " , " +
                     GameRecordsTable.COL_NAME_DURATION + " " + GameRecordsTable.COL_TYPE_DURATION + ")";
